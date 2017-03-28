@@ -6,11 +6,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -18,26 +14,27 @@ import com.vaadin.ui.VerticalLayout;
  * <p>
  * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
  * overridden to add component to the user interface and initialize non-component functionality.
+ *
+ *
+ *
+ * Erstellt nach diesem Tutorial: https://www.youtube.com/watch?v=la7WlG9rQvw
  */
 @Theme("mytheme")
 public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final VerticalLayout layout = new VerticalLayout();
-        
-        final TextField name = new TextField();
-        name.setCaption("Type your name here:");
+        TextField textField = new TextField("Whats yout name?");
+        Button button = new Button("Send");
 
-        Button button = new Button("Click Me");
-        button.addClickListener( e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() 
-                    + ", it works!"));
-        });
-        
-        layout.addComponents(name, button);
-        
-        setContent(layout);
+        VerticalLayout vLayout = new VerticalLayout();
+        vLayout.setMargin(true);
+        vLayout.setSpacing(true);
+        vLayout.addComponents(textField, button);
+
+        setContent(vLayout);
+
+        button.addClickListener(e -> Notification.show("Hello " + textField.getValue()));
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

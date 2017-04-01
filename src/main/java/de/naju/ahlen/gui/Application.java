@@ -1,4 +1,4 @@
-package de.naju.ahlen.main;
+package de.naju.ahlen.gui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

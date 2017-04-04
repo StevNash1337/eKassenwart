@@ -1,34 +1,55 @@
 package de.naju.ahlen.gui;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import com.vaadin.spring.annotation.SpringUI;
+import de.naju.ahlen.gui.ui.MenuWrapper;
 
 @SpringUI(path = "")
 @Theme("mytheme")
 public class VaadinUI extends UI {
 
     private HorizontalSplitPanel wrapper;
-    private VerticalLayout menuWrapper;
+    private MenuWrapper menuWrapper;
     private VerticalLayout contenHomeWrapper;
+
+    public Navigator navigator;
+    protected static final String MAINVIEW = "main";
 
     @Override
     protected void init(VaadinRequest request) {
+        getPage().setTitle("Navigation Example");
+
+        final VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSpacing(true);
+        setContent(layout);
+        Navigator.ComponentContainerViewDisplay viewDisplay = new Navigator.ComponentContainerViewDisplay(layout);
+
+        // Create a navigator to control the views
+        navigator = new Navigator(this, this);
+        //navigator = new Navigator(UI.getCurrent(), viewDisplay);
+
+        // Create and register the views
+        navigator.addView("", new StartView());
+        navigator.addView(MAINVIEW, new MainView());
+    }
+
+    private void tmp(){
         wrapper = new HorizontalSplitPanel();
         wrapper.setSizeFull();
         wrapper.setSplitPosition(280, Unit.PIXELS);
         wrapper.setLocked(true);
 
-        menuWrapper = new VerticalLayout();
+        menuWrapper = new MenuWrapper();
         menuWrapper.setWidth(100, Unit.PERCENTAGE);
         menuWrapper.setMargin(true);
         menuWrapper.setSpacing(true);
 
         contenHomeWrapper = new VerticalLayout();
         contenHomeWrapper.setWidth(100, Unit.PERCENTAGE);
-
-        initMenu();
 
         Button b1 = new Button("Click me", e -> Notification.show("Hello Spring+Vaadin user!", Notification.Type.TRAY_NOTIFICATION));
         contenHomeWrapper.addComponent(b1);
@@ -38,32 +59,5 @@ public class VaadinUI extends UI {
         setContent(wrapper);
     }
 
-    private void initMenu(){
-        // Button Styling: https://vaadin.com/forum#!/thread/1687729
-        Button bHome = new Button("Home");
-        bHome.setStyleName("menu-button");
-        bHome.addClickListener(event -> {
-            Notification.show("bHome was clicked", Notification.Type.TRAY_NOTIFICATION);
-        });
 
-        Button bFinance = new Button("Einnahmen/Ausgaben");
-        bFinance.setStyleName("menu-button");
-        bFinance.addClickListener(event -> {
-            Notification.show("bFinance was clicked", Notification.Type.TRAY_NOTIFICATION);
-        });
-
-        Button bMembers = new Button("Mitglieder");
-        bMembers.setStyleName("menu-button");
-        bMembers.addClickListener(event -> {
-            Notification.show("bMembers was clicked", Notification.Type.TRAY_NOTIFICATION);
-        });
-
-        Button bSettings = new Button("Einstellungen");
-        bSettings.setStyleName("menu-button");
-        bSettings.addClickListener(event -> {
-            Notification.show("bSettings was clicked", Notification.Type.TRAY_NOTIFICATION);
-        });
-
-        menuWrapper.addComponents(bHome, bFinance, bMembers, bSettings);
-    }
 }

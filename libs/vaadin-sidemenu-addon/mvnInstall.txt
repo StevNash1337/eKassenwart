@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=PFAD_ZU_LIBS/libs/vaadin-sidemenu-addon/sidemenu-1.0-SNAPSHOT.jar

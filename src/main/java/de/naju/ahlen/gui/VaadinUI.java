@@ -1,63 +1,87 @@
 package de.naju.ahlen.gui;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.*;
+import com.vaadin.server.*;
 import com.vaadin.spring.annotation.SpringUI;
-import de.naju.ahlen.gui.ui.MenuWrapper;
+import com.vaadin.ui.*;
+import de.naju.ahlen.gui.view.FooView;
+import org.vaadin.teemusa.sidemenu.SideMenu;
+import org.vaadin.teemusa.sidemenu.SideMenuUI;
+
+import javax.servlet.annotation.WebServlet;
+import java.io.File;
+
 
 @SpringUI(path = "")
 @Theme("mytheme")
+@SideMenuUI
 public class VaadinUI extends UI {
 
-    private HorizontalSplitPanel wrapper;
-    private MenuWrapper menuWrapper;
-    private VerticalLayout contenHomeWrapper;
-
-    public Navigator navigator;
-    protected static final String MAINVIEW = "main";
+    private SideMenu sideMenu = new SideMenu();
+    private boolean logoVisible = true;
+    private ThemeResource logo = new ThemeResource("img" + File.separator + "Naju_Logo_Transparent_klein.png");
+    private String menuCaption = "Naju Ahlen e.V.";
 
     @Override
     protected void init(VaadinRequest request) {
-        getPage().setTitle("Navigation Example");
+        getPage().setTitle("eKassenwart");
 
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
-        setContent(layout);
-        Navigator.ComponentContainerViewDisplay viewDisplay = new Navigator.ComponentContainerViewDisplay(layout);
+        setContent(sideMenu);
+        Navigator navigator = new Navigator(this, sideMenu);
+        setNavigator(navigator);
+        navigator.addView("", new FooView("Initial view"));
+        navigator.addView("Foo", new FooView("Foo!mgdmndtndtdbdbdbdr"));
 
-        // Create a navigator to control the views
-        navigator = new Navigator(this, this);
-        //navigator = new Navigator(UI.getCurrent(), viewDisplay);
+        //sideMenu.setMenuCaption(menuCaption, logo);
+        sideMenu.setMenuCaption(menuCaption);
 
-        // Create and register the views
-        navigator.addView("", new StartView());
-        navigator.addView(MAINVIEW, new MainView());
+        // Add Menus with changing the URI in Browser
+        // Navigation examples
+        sideMenu.addNavigation("Initial View", "");
+        sideMenu.addNavigation("Secondary View gfsgsgsr egs", FontAwesome.AMBULANCE, "Foo");
+
+        // Add Menus without changing the URI in Browser
+        // Arbitrary method execution
+        sideMenu.addMenuItem("My Menu Entry", () -> {
+            VerticalLayout content = new VerticalLayout();
+            content.addComponent(new Label("A layout"));
+            sideMenu.setContent(content);
+        });
+        sideMenu.addMenuItem("Entry With Icon", FontAwesome.ANDROID, () -> {
+            VerticalLayout content = new VerticalLayout();
+            content.addComponent(new Label("Another layout"));
+            sideMenu.setContent(content);
+        });
+
+        setUser("", logo);
     }
 
-    private void tmp(){
-        wrapper = new HorizontalSplitPanel();
-        wrapper.setSizeFull();
-        wrapper.setSplitPosition(280, Unit.PIXELS);
-        wrapper.setLocked(true);
+    private void setUser(String name, Resource icon) {
+        //sideMenu.setUserName(name);
+        sideMenu.setUserIcon(icon);
 
-        menuWrapper = new MenuWrapper();
-        menuWrapper.setWidth(100, Unit.PERCENTAGE);
-        menuWrapper.setMargin(true);
-        menuWrapper.setSpacing(true);
+        /*sideMenu.clearUserMenu();
+        sideMenu.addUserMenuItem("Settings", FontAwesome.WRENCH, () -> {
+            Notification.show("Showing settings", Type.TRAY_NOTIFICATION);
+        });
+        sideMenu.addUserMenuItem("Sign out", () -> {
+            Notification.show("Logging out..", Type.TRAY_NOTIFICATION);
+        });
 
-        contenHomeWrapper = new VerticalLayout();
-        contenHomeWrapper.setWidth(100, Unit.PERCENTAGE);
-
-        Button b1 = new Button("Click me", e -> Notification.show("Hello Spring+Vaadin user!", Notification.Type.TRAY_NOTIFICATION));
-        contenHomeWrapper.addComponent(b1);
-
-        wrapper.addComponent(menuWrapper);
-        wrapper.addComponent(contenHomeWrapper);
-        setContent(wrapper);
+        sideMenu.addUserMenuItem("Hide logo", () -> {
+            if (!logoVisible) {
+                sideMenu.setMenuCaption(menuCaption, logo);
+            } else {
+                sideMenu.setMenuCaption(menuCaption);
+            }
+            logoVisible = !logoVisible;
+        });*/
     }
 
-
+    @WebServlet(value = "/*", asyncSupported = true)
+    @VaadinServletConfiguration(productionMode = false, ui = VaadinUI.class)
+    public static class Servlet extends VaadinServlet {
+    }
 }

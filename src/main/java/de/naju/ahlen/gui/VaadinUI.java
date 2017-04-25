@@ -2,11 +2,15 @@ package de.naju.ahlen.gui;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.*;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
-import de.naju.ahlen.gui.view.FooView;
+import de.naju.ahlen.gui.view.ChartView;
+import de.naju.ahlen.gui.view.InitialView;
+import de.naju.ahlen.gui.view.SettingView;
+import de.naju.ahlen.gui.view.TransactionView;
 import org.vaadin.teemusa.sidemenu.SideMenu;
 import org.vaadin.teemusa.sidemenu.SideMenuUI;
 
@@ -31,17 +35,22 @@ public class VaadinUI extends UI {
         setContent(sideMenu);
         Navigator navigator = new Navigator(this, sideMenu);
         setNavigator(navigator);
-        navigator.addView("", new FooView("Initial view"));
-        navigator.addView("Foo", new FooView("Foo!mgdmndtndtdbdbdbdr"));
+        navigator.addView("", new InitialView());
+        navigator.addView("Transactions", new TransactionView());
+        navigator.addView("Statistics", new ChartView());
+        navigator.addView("Settings", new SettingView());
 
         //sideMenu.setMenuCaption(menuCaption, logo);
         sideMenu.setMenuCaption(menuCaption);
 
         // Add Menus with changing the URI in Browser
         // Navigation examples
-        sideMenu.addNavigation("Initial View", "");
-        sideMenu.addNavigation("Secondary View gfsgsgsr egs", FontAwesome.AMBULANCE, "Foo");
+        sideMenu.addNavigation("Startseite", VaadinIcons.HOME_O, "");
+        sideMenu.addNavigation("Transaktionen", VaadinIcons.MONEY_EXCHANGE, "Transactions");
+        sideMenu.addNavigation("Statistiken", VaadinIcons.CHART, "Statistics");
+        sideMenu.addNavigation("Einstellungen", VaadinIcons.WRENCH, "Settings");
 
+        /*
         // Add Menus without changing the URI in Browser
         // Arbitrary method execution
         sideMenu.addMenuItem("My Menu Entry", () -> {
@@ -49,11 +58,13 @@ public class VaadinUI extends UI {
             content.addComponent(new Label("A layout"));
             sideMenu.setContent(content);
         });
-        sideMenu.addMenuItem("Entry With Icon", FontAwesome.ANDROID, () -> {
+
+        sideMenu.addMenuItem("Entry With Icon", VaadinIcons.GOOGLE_PLUS, () -> {
             VerticalLayout content = new VerticalLayout();
             content.addComponent(new Label("Another layout"));
             sideMenu.setContent(content);
         });
+        */
 
         setUser("", logo);
     }

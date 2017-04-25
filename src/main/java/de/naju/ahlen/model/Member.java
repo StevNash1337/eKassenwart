@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Customer {
+public class Member {
 
     @Id
     @GeneratedValue
@@ -15,10 +15,10 @@ public class Customer {
 
     private String lastName;
 
-    protected Customer() {
+    protected Member() {
     }
 
-    public Customer(String firstName, String lastName) {
+    public Member(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -45,7 +45,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.format("Customer[id=%d, firstName='%s', lastName='%s']", id,
+        return String.format("Member[id=%d, firstName='%s', lastName='%s']", id,
                 firstName, lastName);
     }
 

@@ -7,10 +7,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.*;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
-import de.naju.ahlen.gui.view.ChartView;
-import de.naju.ahlen.gui.view.InitialView;
-import de.naju.ahlen.gui.view.SettingView;
-import de.naju.ahlen.gui.view.TransactionView;
+import de.naju.ahlen.gui.view.*;
 import org.vaadin.teemusa.sidemenu.SideMenu;
 import org.vaadin.teemusa.sidemenu.SideMenuUI;
 
@@ -37,16 +34,16 @@ public class VaadinUI extends UI {
         setNavigator(navigator);
         navigator.addView("", new InitialView());
         navigator.addView("Transactions", new TransactionView());
+        navigator.addView("Members", new MemberView());
         navigator.addView("Statistics", new ChartView());
         navigator.addView("Settings", new SettingView());
 
-        //sideMenu.setMenuCaption(menuCaption, logo);
         sideMenu.setMenuCaption(menuCaption);
 
         // Add Menus with changing the URI in Browser
-        // Navigation examples
         sideMenu.addNavigation("Startseite", VaadinIcons.HOME_O, "");
         sideMenu.addNavigation("Transaktionen", VaadinIcons.MONEY_EXCHANGE, "Transactions");
+        sideMenu.addNavigation("Mitglieder", VaadinIcons.MALE, "Members");
         sideMenu.addNavigation("Statistiken", VaadinIcons.CHART, "Statistics");
         sideMenu.addNavigation("Einstellungen", VaadinIcons.WRENCH, "Settings");
 

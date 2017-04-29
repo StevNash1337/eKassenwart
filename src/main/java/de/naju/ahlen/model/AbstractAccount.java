@@ -9,14 +9,7 @@ public abstract class AbstractAccount {
     private String name;
     private double credit;
 
-    public AbstractAccount(){
-        this("", 0);
-    }
-
-    public AbstractAccount(String name, double credit){
-        this.name = name;
-        this.credit = credit;
-    }
+    public AbstractAccount(){}
 
     public String getName() {
         return name;
@@ -24,5 +17,13 @@ public abstract class AbstractAccount {
 
     public double getCredit() {
         return credit;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
     }
 }

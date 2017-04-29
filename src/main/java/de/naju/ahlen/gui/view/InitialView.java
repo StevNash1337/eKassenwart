@@ -14,6 +14,8 @@ public class InitialView extends VerticalLayout implements View {
 
     public InitialView(){
         addComponent(new Label("Hier entsteht die neue Präsenz des Kassenwarts der Naju Ahlen e.V."));
+        addComponent(new Label("\n\nSollte kein NajuModel verfügbar sein, so muss erst eins erstellt werden. Eine entsprechende Abfrage" +
+                " sollte hier zu Beginn erscheinen und ggf. eine alternative View anzeigen."));
     }
 
     @Override

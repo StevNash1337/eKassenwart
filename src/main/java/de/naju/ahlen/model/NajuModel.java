@@ -15,7 +15,6 @@ public class NajuModel {
     @Id
     @GeneratedValue
     private Long id;
-    private Member owner;
     private LinkedList<Member> members;
     private LinkedList<AbstractAccount> accounts;
 
@@ -23,7 +22,23 @@ public class NajuModel {
         this.accounts = new LinkedList<>();
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public LinkedList<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(LinkedList<Member> members) {
+        this.members = members;
+    }
+
     public LinkedList<AbstractAccount> getAccounts() {
         return accounts;
+    }
+
+    public void setAccounts(LinkedList<AbstractAccount> accounts) {
+        this.accounts = accounts;
     }
 }

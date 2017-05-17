@@ -8,10 +8,13 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.DateRenderer;
 import de.naju.ahlen.gui.view.windows.NewTransactionWindow;
-import de.naju.ahlen.model.enums.AmountType;
-import de.naju.ahlen.model.Member;
-import de.naju.ahlen.model.Transaction;
-import de.naju.ahlen.model.enums.TransactionCategory;
+import de.naju.ahlen.persistence.model.Person;
+import de.naju.ahlen.persistence.model.Transaction;
+import de.naju.ahlen.persistence.repositories.PersonRepository;
+import de.naju.ahlen.persistence.repositories.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -20,6 +23,9 @@ import java.util.*;
  */
 @SpringView
 public class TransactionView extends VerticalLayout implements View {
+
+    private PersonRepository personRepository;
+    private TransactionRepository transactionRepository;
 
     private Grid<Transaction> transactionGrid;
     private TextField filterTextField;
@@ -30,18 +36,25 @@ public class TransactionView extends VerticalLayout implements View {
         transactionGrid = new Grid<>();
         transactionGrid.setWidth("100%");
         transactionGrid.setHeight("100%");
-        transactionGrid.addColumn(Transaction::getName).setCaption("Name");
+        //transactionGrid.addColumn(Transaction::getName).setCaption("Name");
         transactionGrid.addColumn(Transaction::getDate, new DateRenderer()).setCaption("Datum");
-        transactionGrid.addColumn(Transaction::getFullName).setCaption("Durchgeführt/Entgegengenommen von");
+        transactionGrid.addColumn(Transaction::getPerson).setCaption("Durchgeführt/Entgegengenommen von");
         transactionGrid.addColumn(Transaction::getAmount).setCaption("Betrag");
-        transactionGrid.addColumn(Transaction::getType).setCaption("Typ");
+        //transactionGrid.addColumn(Transaction::getType).setCaption("Typ");
         transactionGrid.addColumn(Transaction::getCategory).setCaption("Kategorie");
-        transactionGrid.addColumn(Transaction::getComment).setCaption("Kommeentar");
+        transactionGrid.addColumn(Transaction::getComment).setCaption("Kommentar");
 
-        Collection<Transaction> transactions = generatePeopleRandomData();
-        ListDataProvider<Transaction> dataProvider = DataProvider.ofCollection(transactions);
-        transactionGrid.setDataProvider(dataProvider);
+        Person p1 = new Person();
+        p1.setLastName("Biehs");
+        p1.setFirstName("Steffen");
+        personRepository.save(p1);
+        System.out.println(personRepository.findAll().size());
 
+
+        //ListDataProvider<Transaction> dataProvider = DataProvider.ofCollection(transactions);
+        //transactionGrid.setDataProvider(dataProvider);
+
+        /**
         filterTextField = new TextField("Filter by Name");
         filterTextField.setPlaceholder("Name...");
         filterTextField.addValueChangeListener(event -> {
@@ -53,6 +66,7 @@ public class TransactionView extends VerticalLayout implements View {
                 return nameLower.contains(filterLower);
             });
         });
+         */
 
         bNewTransaction = new Button("Neue Transaktion");
         bNewTransaction.addClickListener(new Button.ClickListener() {
@@ -72,7 +86,7 @@ public class TransactionView extends VerticalLayout implements View {
 //        setExpandRatio(transactionGrid, 12);
 //        setExpandRatio(bNewTransaction, 0);
     }
-
+    /**
     private Collection<Transaction> generatePeopleRandomData(){
         LinkedList<Transaction> list = new LinkedList<>();
         list.add(new Transaction("Test1",
@@ -242,6 +256,7 @@ public class TransactionView extends VerticalLayout implements View {
                 "Bier"));
         return list;
     }
+     */
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {

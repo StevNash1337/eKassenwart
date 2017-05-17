@@ -8,14 +8,17 @@ import com.vaadin.server.*;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import de.naju.ahlen.gui.view.*;
+import de.naju.ahlen.gui.view.person.PersonController;
+import de.naju.ahlen.gui.view.person.PersonView;
+import de.naju.ahlen.persistence.model.Person;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.teemusa.sidemenu.SideMenu;
 import org.vaadin.teemusa.sidemenu.SideMenuUI;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.File;
 
-
-@SpringUI(path = "")
+@SpringUI()
 @Theme("mytheme")
 @SideMenuUI
 public class VaadinUI extends UI {
@@ -25,16 +28,24 @@ public class VaadinUI extends UI {
     private ThemeResource logo = new ThemeResource("img" + File.separator + "Naju_Logo_Transparent_klein.png");
     private String menuCaption = "Naju Ahlen e.V.";
 
+    @Autowired
+    private PersonController personController;
+
+    //private TransactionView transactionView;
+
+
     @Override
     protected void init(VaadinRequest request) {
         getPage().setTitle("eKassenwart");
+
+        generateTestData();
 
         setContent(sideMenu);
         Navigator navigator = new Navigator(this, sideMenu);
         setNavigator(navigator);
         navigator.addView("", new InitialView());
-        navigator.addView("Transactions", new TransactionView());
-        navigator.addView("Members", new MemberView());
+        //navigator.addView("Transactions", transactionView);
+        navigator.addView("Members", personController.getPersonView());
         navigator.addView("Statistics", new ChartView());
         navigator.addView("Settings", new SettingView());
 
@@ -42,10 +53,12 @@ public class VaadinUI extends UI {
 
         // Add Menus with changing the URI in Browser
         sideMenu.addNavigation("Startseite", VaadinIcons.HOME_O, "");
-        sideMenu.addNavigation("Transaktionen", VaadinIcons.MONEY_EXCHANGE, "Transactions");
+        //sideMenu.addNavigation("Transaktionen", VaadinIcons.MONEY_EXCHANGE, "Transactions");
         sideMenu.addNavigation("Mitglieder", VaadinIcons.MALE, "Members");
         sideMenu.addNavigation("Statistiken", VaadinIcons.CHART, "Statistics");
         sideMenu.addNavigation("Einstellungen", VaadinIcons.WRENCH, "Settings");
+
+
 
         /*
         // Add Menus without changing the URI in Browser
@@ -64,6 +77,33 @@ public class VaadinUI extends UI {
         */
 
         setUser("", logo);
+    }
+
+    private void generateTestData() {
+        Person p1 = new Person();
+        p1.setFirstName("Lucas");
+        p1.setLastName("Camphausen");
+        p1.setCity("Ahlen");
+        p1.setStreet("Im Beesenfeld");
+        p1.setStreetNumber("47");
+        p1.setZipCode("59227");
+        Person p2 = new Person();
+        p2.setFirstName("Simon");
+        p2.setLastName("Camphausen");
+        p2.setCity("Ahlen");
+        p2.setStreet("Im Beesenfeld");
+        p2.setStreetNumber("47");
+        p2.setZipCode("59227");
+        Person p3 = new Person();
+        p3.setFirstName("David");
+        p3.setLastName("Pannock");
+        p3.setCity("Ahlen");
+        p3.setStreet("Knappenweg");
+        p3.setStreetNumber("4");
+        p3.setZipCode("59229");
+        personController.getPersonRepository().save(p1);
+        personController.getPersonRepository().save(p2);
+        personController.getPersonRepository().save(p3);
     }
 
     private void setUser(String name, Resource icon) {

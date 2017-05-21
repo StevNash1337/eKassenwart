@@ -19,6 +19,9 @@ public abstract class AbstractAccount extends AbstractEntity {
     @Column(name = "start_amount")
     private double startAmount;
 
+    @Column(name = "actual_amount")
+    private double actualAmount;
+
     public String getName() {
         return name;
     }
@@ -33,5 +36,13 @@ public abstract class AbstractAccount extends AbstractEntity {
 
     public void setStartAmount(double startAmount) {
         this.startAmount = startAmount;
+    }
+
+    public double getActualAmount() {
+        return actualAmount;
+    }
+
+    public void setActualAmount(double actualAmount) {
+        this.actualAmount = actualAmount;
     }
 }

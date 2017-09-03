@@ -1,4 +1,4 @@
-package de.naju.ahlen.gui.view;
+package de.naju.ahlen.gui.view.transaction;
 
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;

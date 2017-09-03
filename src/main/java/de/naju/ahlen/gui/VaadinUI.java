@@ -14,14 +14,12 @@ import de.naju.ahlen.gui.view.person.PersonView;
 import de.naju.ahlen.persistence.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.teemusa.sidemenu.SideMenu;
-import org.vaadin.teemusa.sidemenu.SideMenuUI;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.File;
 
 @SpringUI()
 @Theme("mytheme")
-@SideMenuUI
 public class VaadinUI extends UI {
 
     private SideMenu sideMenu = new SideMenu();
@@ -48,7 +46,7 @@ public class VaadinUI extends UI {
         Navigator navigator = new Navigator(this, sideMenu);
         setNavigator(navigator);
         navigator.addView("", new InitialView());
-        //navigator.addView("Transactions", transactionView);
+//        navigator.addView("Transactions", TransactionView);
         navigator.addView("Members", personController.getPersonView());
         navigator.addView("BankAccounts", bankAccountController.getBankAccountView());
         navigator.addView("Statistics", new ChartView());

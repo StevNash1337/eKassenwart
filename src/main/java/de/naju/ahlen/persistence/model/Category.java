@@ -33,4 +33,9 @@ public class Category extends AbstractEntity {
     public void setType(CategoryType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return getType().toString();
+    }
 }

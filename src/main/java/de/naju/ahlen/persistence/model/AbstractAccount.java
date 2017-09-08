@@ -45,4 +45,9 @@ public abstract class AbstractAccount extends AbstractEntity {
     public void setActualAmount(double actualAmount) {
         this.actualAmount = actualAmount;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

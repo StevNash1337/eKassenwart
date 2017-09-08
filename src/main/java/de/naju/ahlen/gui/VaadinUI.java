@@ -11,6 +11,7 @@ import de.naju.ahlen.gui.view.*;
 import de.naju.ahlen.gui.view.bankaccount.BankAccountController;
 import de.naju.ahlen.gui.view.person.PersonController;
 import de.naju.ahlen.gui.view.person.PersonView;
+import de.naju.ahlen.gui.view.transaction.TransactionController;
 import de.naju.ahlen.persistence.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.teemusa.sidemenu.SideMenu;
@@ -33,8 +34,8 @@ public class VaadinUI extends UI {
     @Autowired
     private BankAccountController bankAccountController;
 
-    //private TransactionView transactionView;
-
+    @Autowired
+    private TransactionController transactionController;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -46,7 +47,7 @@ public class VaadinUI extends UI {
         Navigator navigator = new Navigator(this, sideMenu);
         setNavigator(navigator);
         navigator.addView("", new InitialView());
-//        navigator.addView("Transactions", TransactionView);
+        navigator.addView("Transactions", transactionController.getTransactionView());
         navigator.addView("Members", personController.getPersonView());
         navigator.addView("BankAccounts", bankAccountController.getBankAccountView());
         navigator.addView("Statistics", new ChartView());
@@ -56,7 +57,7 @@ public class VaadinUI extends UI {
 
         // Add Menus with changing the URI in Browser
         sideMenu.addNavigation("Startseite", VaadinIcons.HOME_O, "");
-        //sideMenu.addNavigation("Transaktionen", VaadinIcons.MONEY_EXCHANGE, "Transactions");
+        sideMenu.addNavigation("Transaktionen", VaadinIcons.MONEY_EXCHANGE, "Transactions");
         sideMenu.addNavigation("Mitglieder", VaadinIcons.MALE, "Members");
         sideMenu.addNavigation("Konten", VaadinIcons.MALE, "BankAccounts");
         sideMenu.addNavigation("Statistiken", VaadinIcons.CHART, "Statistics");

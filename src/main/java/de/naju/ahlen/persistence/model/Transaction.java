@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Lucas
@@ -13,18 +13,15 @@ import java.util.Date;
 @Entity
 public class Transaction extends AbstractEntity {
 
-    @Column(name = "account")
-    private AbstractAccount account;
-
-    @Temporal(TemporalType.DATE)
+//    @Temporal(TemporalType.DATE)
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "category")
     private Category category;
 
-    @Column(name = "reference")
-    private String reference;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "amount")
     private double amount;
@@ -35,19 +32,18 @@ public class Transaction extends AbstractEntity {
     @Column(name = "comment")
     private String comment;
 
-    public AbstractAccount getAccount() {
-        return account;
-    }
+    @Column(name = "account")
+    private AbstractAccount account;
 
-    public void setAccount(AbstractAccount account) {
-        this.account = account;
-    }
+    @Column(name = "payed")
+    private boolean payed;
 
-    public Date getDate() {
+
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -59,12 +55,12 @@ public class Transaction extends AbstractEntity {
         this.category = category;
     }
 
-    public String getReference() {
-        return reference;
+    public String getDescription() {
+        return description;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getAmount() {
@@ -89,5 +85,21 @@ public class Transaction extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public AbstractAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(AbstractAccount account) {
+        this.account = account;
+    }
+
+    public boolean isPayed() {
+        return payed;
+    }
+
+    public void setPayed(boolean payed) {
+        this.payed = payed;
     }
 }

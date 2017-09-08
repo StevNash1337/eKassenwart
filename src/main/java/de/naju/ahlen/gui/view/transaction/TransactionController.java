@@ -1,12 +1,9 @@
 package de.naju.ahlen.gui.view.transaction;
 
-import de.naju.ahlen.gui.view.person.PersonView;
-import de.naju.ahlen.persistence.model.Person;
+import de.naju.ahlen.persistence.model.Transaction;
 import de.naju.ahlen.persistence.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 /**
  * Created by lucas on 17.05.17.
@@ -19,11 +16,11 @@ public class TransactionController {
     private TransactionRepository transactionRepository;
 
     private TransactionView transactionView;
-    private TransactionForm personForm;
+    private TransactionForm transactionForm;
 
     public TransactionController() {
-//        this.transactionView = new PersonView(this);
-        this.personForm = new TransactionForm(this);
+        this.transactionView = new TransactionView(this);
+        this.transactionForm = new TransactionForm(this);
     }
 
     public TransactionRepository getTransactionRepository() {
@@ -34,8 +31,8 @@ public class TransactionController {
         return transactionView;
     }
 
-    public void updatePersons() {
-//        transactionView.setPersonGridItems(transactionRepository.findAll());
+    public void updateTransactions() {
+//        transactionView.settransactionGridItems(transactionRepository.findAll());
         updateButtons();
     }
 
@@ -50,34 +47,34 @@ public class TransactionController {
     }
 
     public void buttonNewClicked() {
-        personForm.setEntity(new Person());
-        personForm.openInModalPopup();
+        transactionForm.setEntity(new Transaction());
+        transactionForm.openInModalPopup();
     }
 
     public void buttonEditClicked() {
-//        Set<Person> selectedPersons = transactionView.getSelectedPersons();
-//        personForm.setEntity(selectedPersons.iterator().next());
-//        personForm.openInModalPopup();
+//        Set<transaction> selectedtransactions = transactionView.getSelectedtransactions();
+//        transactionForm.setEntity(selectedtransactions.iterator().next());
+//        transactionForm.openInModalPopup();
     }
 
     public void buttonDeleteClicked() {
-//        Set<Person> selectedPersons = transactionView.getSelectedPersons();
-//        transactionRepository.delete(selectedPersons);
-        updatePersons();
+//        Set<transaction> selectedtransactions = transactionView.getSelectedtransactions();
+//        transactionRepository.delete(selectedtransactions);
+        updateTransactions();
     }
 
-    public void personFormSaved(Person person) {
-//        transactionRepository.save(person);
-        updatePersons();
-        personForm.closePopup();
+    public void transactionFormSaved(Transaction transaction) {
+//        transactionRepository.save(transaction);
+        updateTransactions();
+        transactionForm.closePopup();
     }
 
-    public void personFormCanceled() {
-        updatePersons();
-        personForm.closePopup();
+    public void transactionFormCanceled() {
+        updateTransactions();
+        transactionForm.closePopup();
     }
 
 //    private boolean isSelected() {
-//        return transactionView.getSelectedPersons().size() > 0;
+//        return transactionView.getSelectedtransactions().size() > 0;
 //    }
 }

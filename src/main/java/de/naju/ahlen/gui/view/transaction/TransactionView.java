@@ -1,20 +1,14 @@
 package de.naju.ahlen.gui.view.transaction;
 
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.event.selection.SelectionEvent;
+import com.vaadin.event.selection.SelectionListener;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.DateRenderer;
-import de.naju.ahlen.gui.view.windows.NewTransactionWindow;
-import de.naju.ahlen.persistence.model.Person;
 import de.naju.ahlen.persistence.model.Transaction;
-import de.naju.ahlen.persistence.repositories.PersonRepository;
-import de.naju.ahlen.persistence.repositories.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
+import org.vaadin.viritin.grid.MGrid;
 
 import java.util.*;
 
@@ -24,242 +18,91 @@ import java.util.*;
 @SpringView
 public class TransactionView extends VerticalLayout implements View {
 
-    private PersonRepository personRepository;
-    private TransactionRepository transactionRepository;
+    private TransactionController transactionController;
 
-    private Grid<Transaction> transactionGrid;
-    private TextField filterTextField;
-    private Button bNewTransaction;
-
-    public TransactionView(){
-        addComponent(new Label("Money Money Money!!!11^111einself"));
-        transactionGrid = new Grid<>();
-        transactionGrid.setWidth("100%");
-        transactionGrid.setHeight("100%");
-        //transactionGrid.addColumn(Transaction::getName).setCaption("Name");
-        transactionGrid.addColumn(Transaction::getDate, new DateRenderer()).setCaption("Datum");
-        transactionGrid.addColumn(Transaction::getPerson).setCaption("Durchgeführt/Entgegengenommen von");
-        transactionGrid.addColumn(Transaction::getAmount).setCaption("Betrag");
-        //transactionGrid.addColumn(Transaction::getType).setCaption("Typ");
-        transactionGrid.addColumn(Transaction::getCategory).setCaption("Kategorie");
-        transactionGrid.addColumn(Transaction::getComment).setCaption("Kommentar");
-
-        Person p1 = new Person();
-        p1.setLastName("Biehs");
-        p1.setFirstName("Steffen");
-        personRepository.save(p1);
-        System.out.println(personRepository.findAll().size());
+    private MGrid<Transaction> transactionGrid;
+    private TextField tSearch;
+    private Button bNew;
+    private Button bEdit;
+    private Button bDelete;
 
 
-        //ListDataProvider<Transaction> dataProvider = DataProvider.ofCollection(transactions);
-        //transactionGrid.setDataProvider(dataProvider);
+    public TransactionView(TransactionController transactionController) {
+        this.transactionController = transactionController;
 
-        /**
-        filterTextField = new TextField("Filter by Name");
-        filterTextField.setPlaceholder("Name...");
-        filterTextField.addValueChangeListener(event -> {
-            dataProvider.setFilter(Transaction::getName, name -> {
-                String nameLower = name == null ? ""
-                        : name.toLowerCase(Locale.GERMAN);
-                String filterLower = event.getValue()
-                        .toLowerCase(Locale.GERMAN);
-                return nameLower.contains(filterLower);
-            });
-        });
-         */
+        transactionGrid = new MGrid<>(Transaction.class)
+                .withProperties("date", "category", "description", "amount", "person", "comment", "account", "payed")
+                .withColumnHeaders("Datum", "Kategorie", "Beschreibung", "Betrag", "Person", "Kommentar", "Konto", "Bezahlt?")
+                .withFullWidth();
 
-        bNewTransaction = new Button("Neue Transaktion");
-        bNewTransaction.addClickListener(new Button.ClickListener() {
+        transactionGrid.addSelectionListener(new SelectionListener<Transaction>() {
             @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                getUI().addWindow(new NewTransactionWindow("Neue Transaktion"));
+            public void selectionChange(SelectionEvent<Transaction> selectionEvent) {
+                transactionController.updateButtons();
             }
         });
 
-        addComponent(filterTextField);
+        tSearch = new TextField();
+        //tSearch.setIcon(VaadinIcons.SEARCH);
+
+        bNew = new Button(VaadinIcons.PLUS);
+        bEdit = new Button(VaadinIcons.PENCIL);
+        bDelete = new Button(VaadinIcons.TRASH);
+
+        bNew.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                transactionController.buttonNewClicked();
+            }
+        });
+
+        bEdit.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                transactionController.buttonEditClicked();
+            }
+        });
+
+        bDelete.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                transactionController.buttonDeleteClicked();
+            }
+        });
+
+
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.addComponent(tSearch);
+        buttonLayout.addComponent(bNew);
+        buttonLayout.addComponent(bEdit);
+        buttonLayout.addComponent(bDelete);
+
+        addComponent(buttonLayout);
         addComponent(transactionGrid);
-        addComponent(bNewTransaction);
-
-        setComponentAlignment(bNewTransaction, Alignment.BOTTOM_RIGHT);
-
-//        setExpandRatio(filterTextField, 0);
-//        setExpandRatio(transactionGrid, 12);
-//        setExpandRatio(bNewTransaction, 0);
     }
-    /**
-    private Collection<Transaction> generatePeopleRandomData(){
-        LinkedList<Transaction> list = new LinkedList<>();
-        list.add(new Transaction("Test1",
-                new Member("Steffen",
-                        "B.",
-                        123456,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                42,
-                AmountType.Einnahme,
-                TransactionCategory.Verpflegung,
-                ""));
-        list.add(new Transaction("Test2",
-                new Member("Simoms",
-                        "C.",
-                        846345,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                52,
-                AmountType.Einnahme,
-                TransactionCategory.Spende,
-                "Penispumpe"));
-        list.add(new Transaction("Test3",
-                new Member("Lucas",
-                        "C.",
-                        58245,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                62,
-                AmountType.Ausgabe,
-                TransactionCategory.Verpflegung,
-                ""));
-        list.add(new Transaction("Test4",
-                new Member("David",
-                        "P.",
-                        9421664,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                72,
-                AmountType.Einnahme,
-                TransactionCategory.Verpflegung,
-                "Koks"));
-        list.add(new Transaction("Test5",
-                new Member("Fabian",
-                        "K.",
-                        045124,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                82,
-                AmountType.Ausgabe,
-                TransactionCategory.Spende,
-                "Bier"));
-        list.add(new Transaction("Test1",
-                new Member("Steffen",
-                        "B.",
-                        123456,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                42,
-                AmountType.Einnahme,
-                TransactionCategory.Verpflegung,
-                ""));
-        list.add(new Transaction("Test2",
-                new Member("Simoms",
-                        "C.",
-                        846345,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                52,
-                AmountType.Einnahme,
-                TransactionCategory.Spende,
-                "Penispumpe"));
-        list.add(new Transaction("Test3",
-                new Member("Lucas",
-                        "C.",
-                        58245,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                62,
-                AmountType.Ausgabe,
-                TransactionCategory.Verpflegung,
-                ""));
-        list.add(new Transaction("Test4",
-                new Member("David",
-                        "P.",
-                        9421664,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                72,
-                AmountType.Einnahme,
-                TransactionCategory.Verpflegung,
-                "Koks"));
-        list.add(new Transaction("Test5",
-                new Member("Fabian",
-                        "K.",
-                        045124,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                82,
-                AmountType.Ausgabe,
-                TransactionCategory.Spende,
-                "Bier"));
-        list.add(new Transaction("Test1",
-                new Member("Steffen",
-                        "B.",
-                        123456,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                42,
-                AmountType.Einnahme,
-                TransactionCategory.Verpflegung,
-                ""));
-        list.add(new Transaction("Test2",
-                new Member("Simoms",
-                        "C.",
-                        846345,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                52,
-                AmountType.Einnahme,
-                TransactionCategory.Spende,
-                "Penispumpe"));
-        list.add(new Transaction("Test3",
-                new Member("Lucas",
-                        "C.",
-                        58245,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                62,
-                AmountType.Ausgabe,
-                TransactionCategory.Verpflegung,
-                ""));
-        list.add(new Transaction("Test4",
-                new Member("David",
-                        "P.",
-                        9421664,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                72,
-                AmountType.Einnahme,
-                TransactionCategory.Verpflegung,
-                "Koks"));
-        list.add(new Transaction("Test5",
-                new Member("Fabian",
-                        "K.",
-                        045124,
-                        "Musterstraße 1",
-                        "test@test.de"),
-                new Date(),
-                82,
-                AmountType.Ausgabe,
-                TransactionCategory.Spende,
-                "Bier"));
-        return list;
+
+    public void setTransactionGridItems(List<Transaction> items) {
+        transactionGrid.setItems(items);
     }
-     */
+
+    public String getSearchText() {
+        return tSearch.getValue();
+    }
+
+    public Set<Transaction> getSelectedTransactions() {
+        return transactionGrid.getSelectedItems();
+    }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        transactionController.updateTransactions();
+    }
 
+    public void setButtonEditEnabled(boolean b) {
+        bEdit.setEnabled(b);
+    }
+
+    public void setButtonDeleteEnabled(boolean b) {
+        bDelete.setEnabled(b);
     }
 }

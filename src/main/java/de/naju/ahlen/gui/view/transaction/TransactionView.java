@@ -77,8 +77,24 @@ public class TransactionView extends VerticalLayout implements View {
         buttonLayout.addComponent(bEdit);
         buttonLayout.addComponent(bDelete);
 
-        addComponent(buttonLayout);
-        addComponent(transactionGrid);
+        HorizontalLayout gridLayout = new HorizontalLayout();
+        gridLayout.addComponent(transactionGrid);
+
+        setWidth("100%");
+        setHeight("100%");
+//        setSizeFull();
+
+//        buttonLayout.setHeight(null);
+//        buttonLayout.setSizeUndefined();
+//        buttonLayout.setWidth("100%");
+
+        gridLayout.setWidth("100%");
+        gridLayout.setHeight("100%");
+        gridLayout.setSizeFull();
+
+        addComponents(buttonLayout, gridLayout);
+        setExpandRatio(buttonLayout, 0.0f);
+        setExpandRatio(gridLayout, 1.0f);
     }
 
     public void setTransactionGridItems(List<Transaction> items) {

@@ -32,6 +32,7 @@
 # IntelliJ
 /out/
 *.iml
+*.db
 /.idea/workspace.xml
 /.idea/compiler.xml
 /.idea/encodings.xml
@@ -41,6 +42,7 @@
 /.idea/modules.xml
 /.idea/gradle.xml
 /.idea/libraries
+/.idea/kotlinc.xml
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/

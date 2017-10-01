@@ -1,50 +1,90 @@
 package de.naju.ahlen.persistence.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.time.LocalDate;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-/**
- * @author Lucas
- */
+import java.math.BigDecimal;
+import java.util.Date;
 
-@Entity
-public class Transaction extends AbstractEntity {
+@DatabaseTable(tableName = "transactions")
+public class Transaction {
 
-//    @Temporal(TemporalType.DATE)
-    @Column(name = "date")
-    private LocalDate date;
+    @DatabaseField(generatedId = true)
+    private long id;
 
-    @Column(name = "category")
-    private Category category;
+    @DatabaseField(canBeNull = false)
+    private Date date;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "amount")
-    private double amount;
-
-    @Column(name = "person")
-    private Person person;
-
-    @Column(name = "comment")
-    private String comment;
-
-    @Column(name = "account")
+    @DatabaseField(canBeNull = false, foreign = true)
     private AbstractAccount account;
 
-    @Column(name = "payed")
-    private boolean payed;
+    @DatabaseField(canBeNull = false)
+    private int accountType;
 
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
+    private Category category;
 
-    public LocalDate getDate() {
+    @DatabaseField(canBeNull = false)
+    private String text;
+
+    @DatabaseField(canBeNull = false)
+    private BigDecimal amount;
+
+    @DatabaseField
+    private Date billDate;
+
+    @DatabaseField(foreign = true)
+    private Person person;
+
+    @DatabaseField
+    private String comment;
+
+    public Transaction() {
+
+    }
+
+    public Transaction(Date date, AbstractAccount account, int accountType, Category category, String text, BigDecimal amount, Date billDate, Person person, String comment) {
+        this.date = date;
+        this.account = account;
+        this.accountType = accountType;
+        this.category = category;
+        this.text = text;
+        this.amount = amount;
+        this.billDate = billDate;
+        this.person = person;
+        this.comment = comment;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public AbstractAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(AbstractAccount account) {
+        this.account = account;
+    }
+
+    public int getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
     }
 
     public Category getCategory() {
@@ -55,20 +95,28 @@ public class Transaction extends AbstractEntity {
         this.category = category;
     }
 
-    public String getDescription() {
-        return description;
+    public String getText() {
+        return text;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public Date getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(Date billDate) {
+        this.billDate = billDate;
     }
 
     public Person getPerson() {
@@ -85,21 +133,5 @@ public class Transaction extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public AbstractAccount getAccount() {
-        return account;
-    }
-
-    public void setAccount(AbstractAccount account) {
-        this.account = account;
-    }
-
-    public boolean isPayed() {
-        return payed;
-    }
-
-    public void setPayed(boolean payed) {
-        this.payed = payed;
     }
 }

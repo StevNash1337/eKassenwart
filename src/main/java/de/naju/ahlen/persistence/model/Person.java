@@ -1,34 +1,56 @@
 package de.naju.ahlen.persistence.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-/**
- * @author Lucas
- */
+@DatabaseTable(tableName = "persons")
+public class Person {
 
-@Entity
-@Table(name = "persons")
-public class Person extends AbstractEntity {
+    @DatabaseField(generatedId = true)
+    private long id;
 
-    @Column(name = "first_name", nullable = false)
+    @DatabaseField(canBeNull = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @DatabaseField(canBeNull = false)
     private String lastName;
 
-    @Column(name = "city")
+    @DatabaseField
     private String city;
 
-    @Column(name = "zip_code")
-    private String zipCode;
-
-    @Column(name = "street")
+    @DatabaseField
     private String street;
 
-    @Column(name = "street_number")
+    @DatabaseField
     private String streetNumber;
+
+    @DatabaseField
+    private int zipCode;
+
+    @DatabaseField
+    private String email;
+
+    Person() {
+
+    }
+
+    public Person(String firstName, String lastName, String city, String street, String streetNumber, int zipCode, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.city = city;
+        this.street = street;
+        this.streetNumber = streetNumber;
+        this.zipCode = zipCode;
+        this.email = email;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -54,14 +76,6 @@ public class Person extends AbstractEntity {
         this.city = city;
     }
 
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
     public String getStreet() {
         return street;
     }
@@ -78,11 +92,19 @@ public class Person extends AbstractEntity {
         this.streetNumber = streetNumber;
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
+    public int getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(int zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

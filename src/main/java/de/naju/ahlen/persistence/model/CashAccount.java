@@ -1,11 +1,18 @@
 package de.naju.ahlen.persistence.model;
 
-import javax.persistence.Entity;
+import com.j256.ormlite.table.DatabaseTable;
 
-/**
- * @author Lucas
- */
+import java.math.BigDecimal;
 
-@Entity
+@DatabaseTable(tableName = "cash_accounts")
 public class CashAccount extends AbstractAccount {
+
+    public CashAccount() {
+
+    }
+
+    public CashAccount(String name, BigDecimal startAmount) {
+        this.name = name;
+        this.startAmount = startAmount;
+    }
 }

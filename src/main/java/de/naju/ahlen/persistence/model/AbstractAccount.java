@@ -1,26 +1,27 @@
 package de.naju.ahlen.persistence.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import com.j256.ormlite.field.DatabaseField;
 
-/**
- * @author Lucas
- */
+import java.math.BigDecimal;
 
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractAccount extends AbstractEntity {
+public abstract class AbstractAccount {
 
-    @Column(name = "name")
-    private String name;
+    @DatabaseField(generatedId = true)
+    protected long id;
 
-    @Column(name = "start_amount")
-    private double startAmount;
+    @DatabaseField(canBeNull = false)
+    protected String name;
 
-    @Column(name = "actual_amount")
-    private double actualAmount;
+    @DatabaseField(canBeNull = false)
+    protected BigDecimal startAmount;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -30,24 +31,19 @@ public abstract class AbstractAccount extends AbstractEntity {
         this.name = name;
     }
 
-    public double getStartAmount() {
+    public BigDecimal getStartAmount() {
         return startAmount;
     }
 
-    public void setStartAmount(double startAmount) {
+    public void setStartAmount(BigDecimal startAmount) {
         this.startAmount = startAmount;
-    }
-
-    public double getActualAmount() {
-        return actualAmount;
-    }
-
-    public void setActualAmount(double actualAmount) {
-        this.actualAmount = actualAmount;
     }
 
     @Override
     public String toString() {
-        return getName();
+        if (name != null) {
+            return name;
+        }
+        return "";
     }
 }

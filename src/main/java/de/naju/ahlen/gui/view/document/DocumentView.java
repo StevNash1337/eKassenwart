@@ -27,10 +27,23 @@ public class DocumentView extends BaseView<Document> {
     }
 
     @Override
+    protected String getAddToolTip() {
+        return "Neues Dokument erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Dokument bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Dokument löschen";
+    }
+
+    @Override
     protected String getDeleteConfirmationText() {
         return "Sind Sie sicher, dass Sie das Dokument löschen wollen?";
-
-
     }
 
     @Override

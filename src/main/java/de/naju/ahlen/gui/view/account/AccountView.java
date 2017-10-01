@@ -13,6 +13,21 @@ public class AccountView extends BaseView<AbstractAccount> {
     }
 
     @Override
+    protected String getAddToolTip() {
+        return "Neues Konto erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Konto bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Konto löschen";
+    }
+
+    @Override
     protected String getDeleteConfirmationText() {
         return "Sind Sie sicher, dass Sie das Konto löschen wollen?";
     }

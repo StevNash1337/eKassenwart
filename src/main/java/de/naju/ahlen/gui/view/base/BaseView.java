@@ -42,8 +42,10 @@ public abstract class BaseView<T> extends MVerticalLayout implements View {
 
         bNew = new MButton(VaadinIcons.PLUS);
         bNew.addClickListener((Button.ClickListener) event -> controller.buttonNewClicked());
+        bNew.setDescription(getAddToolTip());
         bEdit = new MButton(VaadinIcons.PENCIL);
         bEdit.addClickListener((Button.ClickListener) event -> controller.buttonEditClicked());
+        bEdit.setDescription(getEditToolTip());
         bDelete = new ConfirmButton(
                 VaadinIcons.TRASH,
                 getDeleteConfirmationText(),
@@ -51,6 +53,7 @@ public abstract class BaseView<T> extends MVerticalLayout implements View {
         bDelete.setOkCaption("Löschen");
         bDelete.setCancelCaption("Abbrechen");
         bDelete.setConfirmWindowCaption(getWindowCaption());
+        bDelete.setDescription(getDeleteToolTip());
 
         buttonLayout = new HorizontalLayout();
         buttonLayout.addComponent(bNew);
@@ -86,6 +89,12 @@ public abstract class BaseView<T> extends MVerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         controller.updateGridItems();
     }
+
+    protected abstract String getAddToolTip();
+
+    protected abstract String getEditToolTip();
+
+    protected abstract String getDeleteToolTip();
 
     protected abstract String getDeleteConfirmationText();
 

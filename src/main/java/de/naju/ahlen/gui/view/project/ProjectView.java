@@ -21,11 +21,27 @@ public class ProjectView extends BaseView<Project> {
 
         bActivate = new MButton(VaadinIcons.CHECK);
         bActivate.addClickListener((Button.ClickListener) event -> controller.buttonActivateClicked());
+        bActivate.setDescription(getSelectConfirmationToolTip());
         buttonLayout.addComponent(bActivate, 3);
     }
 
     public void setButtonActivateEnabled(boolean b) {
         bActivate.setEnabled(b);
+    }
+
+    @Override
+    protected String getAddToolTip() {
+        return "Neues Projekt erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Projekt bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Projekt löschen";
     }
 
     @Override
@@ -36,6 +52,10 @@ public class ProjectView extends BaseView<Project> {
     @Override
     protected String getWindowCaption() {
         return "Projekt löschen";
+    }
+
+    protected String getSelectConfirmationToolTip() {
+        return "Projekt auswählen";
     }
 
     @Override

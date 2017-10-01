@@ -16,6 +16,21 @@ public class CashAccountView extends BaseView<CashAccount> {
     }
 
     @Override
+    protected String getAddToolTip() {
+        return "Neues Barkonto erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Barkonto bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Barkonto löschen";
+    }
+
+    @Override
     protected String getDeleteConfirmationText() {
         return "Sind Sie sicher, dass Sie das Konto löschen wollen?";
     }

@@ -16,6 +16,21 @@ public class BankAccountView extends BaseView<BankAccount> {
     }
 
     @Override
+    protected String getAddToolTip() {
+        return "Neues Bankkonto erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Bankkonto bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Bankkonto löschen";
+    }
+
+    @Override
     protected String getDeleteConfirmationText() {
         return "Sind Sie sicher, dass Sie das Konto löschen wollen?";
     }

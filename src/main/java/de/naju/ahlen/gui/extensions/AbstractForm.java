@@ -354,6 +354,8 @@ public abstract class AbstractForm<T> extends CustomComponent {
     public Window openInModalPopup() {
         popup = new Window(getModalWindowTitle(), this);
         popup.setModal(true);
+        popup.setResizable(false);
+        popup.setDraggable(false);
         UI.getCurrent().addWindow(popup);
         focusFirst();
         return popup;

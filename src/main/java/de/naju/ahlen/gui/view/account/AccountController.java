@@ -70,6 +70,7 @@ public class AccountController extends BaseController<AbstractAccount, Long> {
 
         selectAccountTypeWindow = new Window("Neues Konto");
         selectAccountTypeWindow.setContent(layout);
+        selectAccountTypeWindow.setModal(true);
         selectAccountTypeWindow.center();
     }
 

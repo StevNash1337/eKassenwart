@@ -15,6 +15,21 @@ public class PersonView extends BaseView<Person> {
     }
 
     @Override
+    protected String getAddToolTip() {
+        return "Neues Mitglied erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Mitglied bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Mitglied löschen";
+    }
+
+    @Override
     protected String getDeleteConfirmationText() {
         return "Sind Sie sicher, dass Sie die Person löschen wollen?";
     }

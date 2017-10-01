@@ -17,6 +17,21 @@ public class CategoryView extends BaseView<Category> {
     }
 
     @Override
+    protected String getAddToolTip() {
+        return "Neue Kategorie erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Kategorie bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Kategorie löschen";
+    }
+
+    @Override
     protected String getDeleteConfirmationText() {
         return "Sind Sie sicher, dass Sie die Kategorie löschen wollen?";
     }

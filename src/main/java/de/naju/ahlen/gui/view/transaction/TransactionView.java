@@ -7,17 +7,27 @@ import de.naju.ahlen.persistence.model.Transaction;
 import de.naju.ahlen.util.Util;
 import org.vaadin.viritin.grid.MGrid;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 @UIScope
 @SpringView
 public class TransactionView extends BaseView<Transaction> {
 
     public TransactionView(TransactionController controller) {
         super(controller, "Buchungen");
+    }
+
+    @Override
+    protected String getAddToolTip() {
+        return "Neue Transatkion erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Transaktion bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Transaktion löschen";
     }
 
     @Override

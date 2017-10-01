@@ -18,6 +18,7 @@ import de.naju.ahlen.gui.view.project.ProjectController;
 import de.naju.ahlen.gui.view.transaction.TransactionController;
 import org.springframework.beans.factory.annotation.Autowired;
 import de.naju.ahlen.gui.extensions.MySideMenu;
+import org.springframework.context.annotation.Scope;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.File;

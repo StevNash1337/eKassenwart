@@ -18,6 +18,21 @@ public class OnlineAccountView extends BaseView<OnlineAccount> {
     }
 
     @Override
+    protected String getAddToolTip() {
+        return "Neues Onlinekonto erstellen";
+    }
+
+    @Override
+    protected String getEditToolTip() {
+        return "Onlinekonto bearbeiten";
+    }
+
+    @Override
+    protected String getDeleteToolTip() {
+        return "Onlinekonto löschen";
+    }
+
+    @Override
     protected String getDeleteConfirmationText() {
         return "Sind Sie sicher, dass Sie das Konto löschen wollen?";
     }

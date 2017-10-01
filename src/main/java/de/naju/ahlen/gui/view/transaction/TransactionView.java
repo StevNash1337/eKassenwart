@@ -84,7 +84,8 @@ public class TransactionView extends VerticalLayout implements View {
         setHeight("100%");
 //        setSizeFull();
 
-//        buttonLayout.setHeight(null);
+//        buttonLayout.setSizeFull();
+//        buttonLayout.setHeight("auto");
 //        buttonLayout.setSizeUndefined();
 //        buttonLayout.setWidth("100%");
 

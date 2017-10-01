@@ -1,100 +1,116 @@
 package de.naju.ahlen.gui.view.transaction;
 
-import com.vaadin.data.Binder;
-import com.vaadin.ui.CheckBox;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.converter.LocalDateToDateConverter;
+import com.vaadin.data.converter.StringToBigDecimalConverter;
+import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
-import de.naju.ahlen.gui.extensions.AbstractForm;
-import de.naju.ahlen.persistence.model.AbstractAccount;
-import de.naju.ahlen.persistence.model.Category;
-import de.naju.ahlen.persistence.model.Person;
-import de.naju.ahlen.persistence.model.Transaction;
+import com.vaadin.ui.ItemCaptionGenerator;
+import de.naju.ahlen.gui.view.base.BaseForm;
+import de.naju.ahlen.persistence.model.*;
+import de.naju.ahlen.persistence.model.enums.TransactionType;
 import org.vaadin.viritin.fields.MTextField;
-import org.vaadin.viritin.layouts.MFormLayout;
-import org.vaadin.viritin.layouts.MVerticalLayout;
 
-/**
- * Created by lucas on 17.05.17.
- */
-public class TransactionForm extends AbstractForm<Transaction> {
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.LinkedList;
+import java.util.List;
 
-    private TransactionController transactionController;
+public class TransactionForm extends BaseForm<Transaction> {
 
-    private Binder<Transaction> binder = new Binder<>(Transaction.class);
+    private ComboBox<TransactionType> type = new ComboBox<>("Typ");
+    private DateField date = new DateField("Datum");
+    private ComboBox<AbstractAccount> account= new ComboBox<>("Konto");
+    private ComboBox<Category> category = new ComboBox<>("Kategorie");
+    private MTextField text = new MTextField("Text");
+    private MTextField amount = new MTextField("Betrag");
 
-    private DateField date;
-    private ComboBox<Category> category;
-    private MTextField description;
-    private MTextField amount;
-    private ComboBox<Person> person;
-    private MTextField comment;
-    private ComboBox<AbstractAccount> account;
-    private CheckBox payed;
+    private TransactionController controller;
 
-    public TransactionForm(TransactionController transactionController) {
-        super(Transaction.class);
-        this.transactionController = transactionController;
+    public TransactionForm(TransactionController controller) {
+        super(controller);
 
-        this.setBinder(binder);
+        this.controller = controller;
 
-        date = new DateField("Datum");
+        date.setTextFieldEnabled(false);
 
-        category = new ComboBox("Kategorie");
-        category.setEmptySelectionAllowed(false);
+        List<TransactionType> types = new LinkedList<>();
+        types.add(TransactionType.INCOME);
+        types.add(TransactionType.EXPENSE);
 
-        description = new MTextField("Beschreibung");
+        type.setItems(types);
+        type.setEmptySelectionAllowed(false);
+        type.addValueChangeListener(new HasValue.ValueChangeListener<TransactionType>() {
+            @Override
+            public void valueChange(HasValue.ValueChangeEvent<TransactionType> event) {
+                if (type.getSelectedItem().isPresent()) {
+                    updateComboBoxes(type.getValue());
+                }
+            }
+        });
 
-        amount = new MTextField("Betrag");
-
-        person = new ComboBox("Person");
-        person.setEmptySelectionAllowed(false);
-
-        comment = new MTextField("Kommentar");
-
-        account = new ComboBox("Konto");
+        account.setItems(controller.getAccounts());
+        account.setTextInputAllowed(false);
         account.setEmptySelectionAllowed(false);
+        account.setItemCaptionGenerator((ItemCaptionGenerator<AbstractAccount>) item -> item.getName());
+        category.setItems(controller.getCategories(TransactionType.EXPENSE));
+        category.setTextInputAllowed(false);
+        category.setEmptySelectionAllowed(false);
+        category.setItemCaptionGenerator((ItemCaptionGenerator<Category>) item -> item.getValue());
 
-        payed = new CheckBox("Bezahlt?");
+        SerializablePredicate<Transaction> typeNotEmptyPredicate =
+                (SerializablePredicate<Transaction>) v -> type.getSelectedItem().isPresent();
+
+        SerializablePredicate<Transaction> accountNotEmptyPredicate =
+                (SerializablePredicate<Transaction>) v -> account.getSelectedItem().isPresent();
+
+        SerializablePredicate<Transaction> categoryNotEmptyPredicate =
+                (SerializablePredicate<Transaction>) v -> category.getSelectedItem().isPresent();
+
+        SerializablePredicate<LocalDate> dateNotEmptyPredicate =
+                (SerializablePredicate<LocalDate>) v -> (!date.isEmpty());
+
+        SerializablePredicate<String> textNotEmptyPredicate =
+                (SerializablePredicate<String>) v -> !text.isEmpty();
+
+        SerializablePredicate<String> amountNotEmptyPredicate =
+                (SerializablePredicate<String>) v -> (!amount.isEmpty());
+
+        binder.withValidator(typeNotEmptyPredicate, "Typ auswählen");
+
+        binder.withValidator(accountNotEmptyPredicate, "Konto auswählen");
+
+        binder.withValidator(categoryNotEmptyPredicate, "Konto auswählen");
+
+        binder.forField(date)
+                .withValidator(dateNotEmptyPredicate, "Datum auswählen")
+                .withConverter(new LocalDateToDateConverter(ZoneId.systemDefault()))
+                .bind(Transaction::getDate, Transaction::setDate);
+
+        binder.forField(text)
+                .withValidator(textNotEmptyPredicate, "Text darf nicht leer sein")
+                .bind(Transaction::getText, Transaction::setText);
 
         binder.forField(amount)
                 .withNullRepresentation("")
-                .withConverter(Double::valueOf, String::valueOf, "Betrag muss Dezimalzahl sein")
+                .withValidator(amountNotEmptyPredicate, "Betrag darf nicht leer sein")
+                .withConverter(new StringToBigDecimalConverter(BigDecimal.ZERO, "Falsche Format"))
                 .bind(Transaction::getAmount, Transaction::setAmount);
 
-        setSavedHandler(new SavedHandler<Transaction>() {
-            @Override
-            public void onSave(Transaction transaction) {
-                transactionController.transactionFormSaved(transaction);
-            }
-        });
-
-        setResetHandler(new ResetHandler<Transaction>() {
-            @Override
-            public void onReset(Transaction transaction) {
-                transactionController.transactionFormCanceled();
-            }
-        });
-
-        setSizeUndefined();
-    }
-
-    public void setSavedHandler(SavedHandler<Transaction> savedHandler) {
+        bind();
     }
 
     @Override
-    protected Component createContent() {
-        return new MVerticalLayout(
-                new MFormLayout(
-                        date,
-                        category,
-                        description,
-                        amount,
-                        person,
-                        comment,
-                        account,
-                        payed
-                ).withWidth(""), getToolbar()
-        ).withWidth("");
+    public void setEntity(Transaction entity) {
+        super.setEntity(entity);
+        updateComboBoxes(TransactionType.EXPENSE);
+    }
+
+    private void updateComboBoxes(TransactionType type) {
+        account.setItems(controller.getAccounts());
+        category.setItems(controller.getCategories(type));
     }
 }

@@ -2,7 +2,6 @@ package de.naju.ahlen.gui.extensions;
 
 import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.data.Binder;
-import com.vaadin.server.ClientConnector;
 import com.vaadin.ui.*;
 import org.vaadin.viritin.button.DeleteButton;
 import org.vaadin.viritin.button.MButton;
@@ -12,10 +11,10 @@ import org.vaadin.viritin.layouts.MHorizontalLayout;
 import java.io.Serializable;
 
 
-/*
-Ein Klasse für die Forms. Im Grude Kopie vom Original
-    https://github.com/viritin/viritin/blob/master/src/main/java/org/vaadin/viritin/form/AbstractForm.java
-aber abgeändert, damit die Buttons mit dem anderen Binder richtig aktiviert werden.
+/**
+ * Ein Klasse für die Forms. Im Grunde Kopie vom Original
+ *  https://github.com/viritin/viritin/blob/master/src/main/java/org/vaadin/viritin/form/AbstractForm.java
+ * aber abgeändert, damit die Buttons mit dem anderen Binder richtig aktiviert werden.
  */
 public abstract class AbstractForm<T> extends CustomComponent {
 
@@ -161,8 +160,8 @@ public abstract class AbstractForm<T> extends CustomComponent {
     }
 
     public void setBinder(Binder<T> binder) {
+        addBinderListeners(binder);
         this.binder = binder;
-        addBinderListeners(this.binder);
     }
 
     protected void lazyInit() {

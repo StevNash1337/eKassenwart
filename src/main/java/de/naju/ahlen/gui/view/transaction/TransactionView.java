@@ -1,125 +1,45 @@
 package de.naju.ahlen.gui.view.transaction;
 
-import com.vaadin.event.selection.SelectionEvent;
-import com.vaadin.event.selection.SelectionListener;
-import com.vaadin.icons.VaadinIcons;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.*;
+import com.vaadin.spring.annotation.UIScope;
+import de.naju.ahlen.gui.view.base.BaseView;
 import de.naju.ahlen.persistence.model.Transaction;
+import de.naju.ahlen.util.Util;
 import org.vaadin.viritin.grid.MGrid;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-/**
- * Created by Steffen on 25.04.2017.
- */
+@UIScope
 @SpringView
-public class TransactionView extends VerticalLayout implements View {
+public class TransactionView extends BaseView<Transaction> {
 
-    private TransactionController transactionController;
-
-    private MGrid<Transaction> transactionGrid;
-    private TextField tSearch;
-    private Button bNew;
-    private Button bEdit;
-    private Button bDelete;
-
-
-    public TransactionView(TransactionController transactionController) {
-        this.transactionController = transactionController;
-
-        transactionGrid = new MGrid<>(Transaction.class)
-                .withProperties("date", "category", "description", "amount", "person", "comment", "account", "payed")
-                .withColumnHeaders("Datum", "Kategorie", "Beschreibung", "Betrag", "Person", "Kommentar", "Konto", "Bezahlt?")
-                .withFullWidth();
-
-        transactionGrid.addSelectionListener(new SelectionListener<Transaction>() {
-            @Override
-            public void selectionChange(SelectionEvent<Transaction> selectionEvent) {
-                transactionController.updateButtons();
-            }
-        });
-
-        tSearch = new TextField();
-        //tSearch.setIcon(VaadinIcons.SEARCH);
-
-        bNew = new Button(VaadinIcons.PLUS);
-        bEdit = new Button(VaadinIcons.PENCIL);
-        bDelete = new Button(VaadinIcons.TRASH);
-
-        bNew.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                transactionController.buttonNewClicked();
-            }
-        });
-
-        bEdit.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                transactionController.buttonEditClicked();
-            }
-        });
-
-        bDelete.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                transactionController.buttonDeleteClicked();
-            }
-        });
-
-
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.addComponent(tSearch);
-        buttonLayout.addComponent(bNew);
-        buttonLayout.addComponent(bEdit);
-        buttonLayout.addComponent(bDelete);
-
-        HorizontalLayout gridLayout = new HorizontalLayout();
-        gridLayout.addComponent(transactionGrid);
-
-        setWidth("100%");
-        setHeight("100%");
-//        setSizeFull();
-
-//        buttonLayout.setSizeFull();
-//        buttonLayout.setHeight("auto");
-//        buttonLayout.setSizeUndefined();
-//        buttonLayout.setWidth("100%");
-
-        gridLayout.setWidth("100%");
-        gridLayout.setHeight("100%");
-        gridLayout.setSizeFull();
-
-        addComponents(buttonLayout, gridLayout);
-        setExpandRatio(buttonLayout, 0.0f);
-        setExpandRatio(gridLayout, 1.0f);
-    }
-
-    public void setTransactionGridItems(List<Transaction> items) {
-        transactionGrid.setItems(items);
-    }
-
-    public String getSearchText() {
-        return tSearch.getValue();
-    }
-
-    public Set<Transaction> getSelectedTransactions() {
-        return transactionGrid.getSelectedItems();
+    public TransactionView(TransactionController controller) {
+        super(controller, "Buchungen");
     }
 
     @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        transactionController.updateTransactions();
+    protected String getDeleteConfirmationText() {
+        return "Sind Sie sicher, dass Sie die Buchung löschen wollen?";
     }
 
-    public void setButtonEditEnabled(boolean b) {
-        bEdit.setEnabled(b);
+    @Override
+    protected String getWindowCaption() {
+        return "Transaktion löschen";
     }
 
-    public void setButtonDeleteEnabled(boolean b) {
-        bDelete.setEnabled(b);
+    @Override
+    protected void initializeGrid() {
+        grid = new MGrid<>(Transaction.class);
+        grid.removeAllColumns();
+        grid.addColumn(item -> Util.dateFormat().format(item.getDate()));
+        grid.addColumn(item -> item.getAccount().getName());
+        grid.addColumn(item -> item.getCategory().getValue());
+        grid.addColumn(item -> item.getText());
+        grid.addColumn(item -> Util.decimalFormat().format(item.getAmount()));
+        grid.withColumnHeaders("Datum", "Konto", "Kategorie", "Text", "Betrag");
+        grid.setSizeFull();
     }
 }

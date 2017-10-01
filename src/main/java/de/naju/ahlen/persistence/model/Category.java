@@ -1,29 +1,44 @@
 package de.naju.ahlen.persistence.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import de.naju.ahlen.persistence.model.enums.CategoryType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+@DatabaseTable(tableName = "categories")
+public class Category {
 
-/**
- * @author Lucas
- */
+    @DatabaseField(generatedId = true)
+    private long id;
 
-@Entity
-public class Category extends AbstractEntity {
+    @DatabaseField(canBeNull = false)
+    private String value;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "type")
+    @DatabaseField(canBeNull = false)
     private CategoryType type;
 
-    public String getName() {
-        return name;
+    Category() {
+
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Category(String value, CategoryType type) {
+        this.value = value;
+        this.type = type;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public CategoryType getType() {
@@ -36,6 +51,9 @@ public class Category extends AbstractEntity {
 
     @Override
     public String toString() {
-        return getType().toString();
+        if (value != null) {
+            return value;
+        }
+        return "";
     }
 }

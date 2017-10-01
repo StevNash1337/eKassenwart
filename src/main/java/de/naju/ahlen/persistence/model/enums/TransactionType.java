@@ -1,6 +1,6 @@
 package de.naju.ahlen.persistence.model.enums;
 
-public enum CategoryType {
+public enum TransactionType {
 
     INCOME,
     EXPENSE;

@@ -1,65 +1,42 @@
 package de.naju.ahlen.gui.view.person;
 
-import com.vaadin.ui.Component;
+import com.vaadin.data.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.SerializablePredicate;
+import de.naju.ahlen.gui.view.base.BaseForm;
 import de.naju.ahlen.persistence.model.Person;
 import org.vaadin.viritin.fields.MTextField;
-import org.vaadin.viritin.form.AbstractForm;
-import org.vaadin.viritin.layouts.MFormLayout;
-import org.vaadin.viritin.layouts.MVerticalLayout;
 
-/**
- * Created by lucas on 17.05.17.
- */
-public class PersonForm extends AbstractForm<Person> {
+public class PersonForm extends BaseForm<Person> {
 
-    private PersonController personController;
+    private MTextField firstName = new MTextField("Vorname");
+    private MTextField lastName = new MTextField("Nachname");
+    private MTextField street = new MTextField("Straße");
+    private MTextField streetNumber = new MTextField("Hausnummer");
+    private MTextField zipCode = new MTextField("Postleitzahl");
+    private MTextField city = new MTextField("Stadt");
+    private MTextField email = new MTextField("eMail");
 
-    private MTextField firstName;
-    private MTextField lastName;
-    private MTextField street;
-    private MTextField streetNumber;
-    private MTextField zipCode;
-    private MTextField city;
+        public PersonForm(PersonController controller) {
+        super(controller);
 
-    public PersonForm(PersonController personController) {
-        super(Person.class);
-        this.personController = personController;
+        SerializablePredicate<String> firstNameNotEmptyPredicate =
+                (SerializablePredicate<String>) v -> !firstName.isEmpty();
 
-        firstName = new MTextField("Vorname");
-        lastName = new MTextField("Nachname");
-        street = new MTextField("Straße");
-        streetNumber = new MTextField("Hausnummer");
-        zipCode = new MTextField("Postleitzahl");
-        city = new MTextField("Ort");
+        SerializablePredicate<String> lastNameNotEmptyPredicate =
+                (SerializablePredicate<String>) v -> !lastName.isEmpty();
 
-        setSavedHandler(new SavedHandler<Person>() {
-            @Override
-            public void onSave(Person person) {
-                personController.personFormSaved(person);
-            }
-        });
+        binder.forField(firstName)
+                .withValidator(firstNameNotEmptyPredicate, "Vorname darf nicht leer sein")
+                .bind(Person::getFirstName, Person::setFirstName);
+        binder.forField(lastName)
+                .withValidator(lastNameNotEmptyPredicate, "Nachname darf nicht leer sein")
+                .bind(Person::getLastName, Person::setLastName);
+        binder.forField(zipCode)
+                .withNullRepresentation("")
+                .withConverter(new StringToIntegerConverter("Falsche Eingabe"))
+                .bind(Person::getZipCode, Person::setZipCode);
 
-        setResetHandler(new ResetHandler<Person>() {
-            @Override
-            public void onReset(Person person) {
-                personController.personFormCanceled();
-            }
-        });
-
-        setSizeUndefined();
-    }
-
-    @Override
-    protected Component createContent() {
-        return new MVerticalLayout(
-                new MFormLayout(
-                        firstName,
-                        lastName,
-                        street,
-                        streetNumber,
-                        zipCode,
-                        city
-                ).withWidth(""), getToolbar()
-        ).withWidth("");
+        bind();
     }
 }

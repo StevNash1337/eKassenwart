@@ -1,20 +1,41 @@
 package de.naju.ahlen.persistence.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-/**
- * @author Lucas
- */
+import java.math.BigDecimal;
 
-@Entity
+@DatabaseTable(tableName = "bank_accounts")
 public class BankAccount extends AbstractAccount {
 
-    @Column(name = "account_number")
+    @DatabaseField(canBeNull = false)
+    private int bankNumber;
+
+    @DatabaseField(canBeNull = false)
     private int accountNumber;
 
-    @Column(name = "bank_number")
-    private int bankNumber;
+    @DatabaseField(canBeNull = false)
+    private String iban;
+
+    public BankAccount() {
+
+    }
+
+    public BankAccount(String name, BigDecimal startAmount, int bankNumber, int accountNumber, String iban) {
+        this.name = name;
+        this.startAmount = startAmount;
+        this.bankNumber = bankNumber;
+        this.accountNumber = accountNumber;
+        this.iban = iban;
+    }
+
+    public int getBankNumber() {
+        return bankNumber;
+    }
+
+    public void setBankNumber(int bankNumber) {
+        this.bankNumber = bankNumber;
+    }
 
     public int getAccountNumber() {
         return accountNumber;
@@ -24,11 +45,11 @@ public class BankAccount extends AbstractAccount {
         this.accountNumber = accountNumber;
     }
 
-    public int getBankNumber() {
-        return bankNumber;
+    public String getIban() {
+        return iban;
     }
 
-    public void setBankNumber(int bankNumber) {
-        this.bankNumber = bankNumber;
+    public void setIban(String iban) {
+        this.iban = iban;
     }
 }
